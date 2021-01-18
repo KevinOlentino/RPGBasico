@@ -6,25 +6,23 @@
         xmlns:local="clr-namespace:RPGBasico"
         mc:Ignorable="d"
         Title="O alto da colina" Height="690" Width="735" WindowStartupLocation="CenterScreen">
-    <Grid Margin="0,0,-0.2,-20">
+    <Grid Margin="0">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="78*"/>
-            <ColumnDefinition Width="370*"/>
-            <ColumnDefinition Width="281*"/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="BtnNorte" Content="Norte" HorizontalAlignment="Left" Height="19" Margin="123,474,0,0" VerticalAlignment="Top" Width="54" Grid.Column="2" Click="BtnNorte_Click"/>
-        <Button x:Name="BtnSul" Content="Sul" HorizontalAlignment="Left" Height="20" Margin="123,524,0,0" VerticalAlignment="Top" Width="54" Grid.Column="2" Click="BtnSul_Click"/>
-        <Button x:Name="BtnOeste" Content="Oeste" HorizontalAlignment="Left" Height="20" Margin="55,499,0,0" VerticalAlignment="Top" Width="54" Grid.Column="2" Click="BtnOeste_Click"/>
-        <Button x:Name="BtnLeste" Content="Leste" HorizontalAlignment="Left" Height="20" Margin="187,499,0,0" VerticalAlignment="Top" Width="54" Grid.Column="2" Click="BtnLeste_Click"/>
+        <Button x:Name="BtnNorte" Content="Norte" HorizontalAlignment="Left" Height="19" Margin="570,474,0,0" VerticalAlignment="Top" Width="54" Click="BtnNorte_Click"/>
+        <Button x:Name="BtnSul" Content="Sul" HorizontalAlignment="Left" Height="20" Margin="570,524,0,0" VerticalAlignment="Top" Width="54" Click="BtnSul_Click"/>
+        <Button x:Name="BtnOeste" Content="Oeste" HorizontalAlignment="Left" Height="20" Margin="502,499,0,0" VerticalAlignment="Top" Width="54" Click="BtnOeste_Click"/>
+        <Button x:Name="BtnLeste" Content="Leste" HorizontalAlignment="Left" Height="20" Margin="634,499,0,0" VerticalAlignment="Top" Width="54" Click="BtnLeste_Click"/>
         <Label x:Name="Nome" Content="Nome" HorizontalAlignment="Left" Height="26" Margin="10,10,0,0" VerticalAlignment="Top" Width="47"/>
         <Label x:Name="Dinheiro" Content="Dinheiro" HorizontalAlignment="Left" Height="26" Margin="10,36,0,0" VerticalAlignment="Top" Width="56"/>
         <Label x:Name="Vida" Content="Vida" HorizontalAlignment="Left" Height="26" Margin="10,67,0,0" VerticalAlignment="Top" Width="47"/>
-        <Label x:Name="lblNome" Content="" HorizontalAlignment="Left" Height="26" Margin="66,10,0,0" VerticalAlignment="Top" Width="52" Grid.ColumnSpan="2"/>
-        <Label x:Name="lblDinheiro" Content="" HorizontalAlignment="Left" Height="26" Margin="66,36,0,0" VerticalAlignment="Top" Width="52" Grid.ColumnSpan="2"/>
-        <Label x:Name="lblVida" Content="" HorizontalAlignment="Left" Height="26" Margin="66,67,0,0" VerticalAlignment="Top" Width="52" Grid.ColumnSpan="2"/>
+        <Label x:Name="lblNome" Content="" HorizontalAlignment="Left" Height="26" Margin="66,10,0,0" VerticalAlignment="Top" Width="52"/>
+        <Label x:Name="lblDinheiro" Content="" HorizontalAlignment="Left" Height="26" Margin="66,36,0,0" VerticalAlignment="Top" Width="52"/>
+        <Label x:Name="lblVida" Content="" HorizontalAlignment="Left" Height="26" Margin="66,67,0,0" VerticalAlignment="Top" Width="52"/>
         <Label x:Name="label4" Content="Level" HorizontalAlignment="Left" Height="26" Margin="10,98,0,0" VerticalAlignment="Top" Width="47"/>
-        <Label x:Name="lblLevel" Content="" HorizontalAlignment="Left" Height="26" Margin="66,98,0,0" VerticalAlignment="Top" Width="52" Grid.ColumnSpan="2"/>
-        <Label Content="Select Action" Grid.Column="2" HorizontalAlignment="Left" Margin="187,542,-5.2,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Width="99">
+        <Label x:Name="lblLevel" Content="" HorizontalAlignment="Left" Height="26" Margin="66,98,0,0" VerticalAlignment="Top" Width="52"/>
+        <Label Content="Select Action" HorizontalAlignment="Left" Margin="634,542,-6,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Width="99">
             <Label.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -34,20 +32,20 @@
                 </TransformGroup>
             </Label.RenderTransform>
         </Label>
-        <ComboBox x:Name="CboWeapons" Grid.Column="2" HorizontalAlignment="Left" Margin="28,598,0,59" VerticalAlignment="Center" Width="120" Height="23"/>
-        <ComboBox x:Name="CboPocoes" Grid.Column="2" HorizontalAlignment="Left" Margin="28,571,0,0" VerticalAlignment="Top" Width="120"/>
-        <Button x:Name="BtnUseWeapon" Content="Use" Grid.Column="2" HorizontalAlignment="Left" Margin="187,571,0,0" VerticalAlignment="Top" Width="75" Click="BtnUseWeapon_Click" />
-        <Button x:Name="btnUsePotion" Content="Use" Grid.Column="2" HorizontalAlignment="Left" Margin="187,602,0,0" VerticalAlignment="Top" Width="75" Click="btnUsePotion_Click"/>
-        <RichTextBox x:Name="RbtMensagem" Grid.Column="1" HorizontalAlignment="Left" Height="286" Margin="280.6,123,0,0" VerticalAlignment="Top" Width="360" Grid.ColumnSpan="2" IsReadOnly="True">
+        <ComboBox x:Name="CboWeapons" HorizontalAlignment="Left" Margin="475,588,0,49" VerticalAlignment="Center" Width="120" Height="22"/>
+        <ComboBox x:Name="CboPocoes" HorizontalAlignment="Left" Margin="475,571,0,0" VerticalAlignment="Top" Width="120"/>
+        <Button x:Name="BtnUseWeapon" Content="Use" HorizontalAlignment="Left" Margin="634,571,0,0" VerticalAlignment="Top" Width="75" Click="BtnUseWeapon_Click" />
+        <Button x:Name="btnUsePotion" Content="Use" HorizontalAlignment="Left" Margin="634,602,0,0" VerticalAlignment="Top" Width="75" Click="btnUsePotion_Click"/>
+        <RichTextBox x:Name="RbtMensagem" HorizontalAlignment="Left" Height="286" Margin="359,123,0,0" VerticalAlignment="Top" Width="360" IsReadOnly="True">
             <FlowDocument>
                 <Paragraph>
                     <Run Text="RichTextBox"/>
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>
-        <DataGrid x:Name="dgvInvetory" HorizontalAlignment="Left" Height="197" Margin="10,142,0,0" VerticalAlignment="Top" Width="324" IsReadOnly="True" IsEnabled="False" Grid.ColumnSpan="2"/>
-        <DataGrid x:Name="dgvQuest" HorizontalAlignment="Left" Height="140" Margin="10,379,0,0" VerticalAlignment="Top" Width="324" IsReadOnly="True" Uid="U" IsEnabled="False" Grid.ColumnSpan="2"/>
-        <RichTextBox x:Name="RbtLocation" Grid.Column="1" HorizontalAlignment="Left" Height="105" Margin="280.6,13,0,0" VerticalAlignment="Top" Width="360" Grid.ColumnSpan="2">
+        <DataGrid x:Name="dgvInvetory" HorizontalAlignment="Left" Height="197" Margin="10,142,0,0" VerticalAlignment="Top" Width="324" IsReadOnly="True" IsEnabled="False"/>
+        <DataGrid x:Name="dgvQuest" HorizontalAlignment="Left" Height="140" Margin="10,379,0,0" VerticalAlignment="Top" Width="324" IsReadOnly="True" Uid="U" IsEnabled="False"/>
+        <RichTextBox x:Name="RbtLocation" HorizontalAlignment="Left" Height="105" Margin="359,13,0,0" VerticalAlignment="Top" Width="360">
             <FlowDocument>
                 <Paragraph>
                     <Run Text="RichTextBox"/>
