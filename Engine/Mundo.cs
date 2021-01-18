@@ -61,6 +61,7 @@ namespace Engine
             Items.Add(new Item(ITEM_ID_SPIDER_FANG, "Presa de Aranha", "Presas de Aranha"));
             Items.Add(new Item(ITEM_ID_SPIDER_SILK, "Teia de Aranha", "Teia de Aranha"));
             Items.Add(new Item(ITEM_ID_ADVENTURER_PASS, "Passe de Aventura", "Passe de Aventura"));
+
         }
 
         private static void PopulateMonsters()
@@ -201,6 +202,30 @@ namespace Engine
                 if(quest.ID == id)
                 {
                     return quest;
+                }
+            }
+            return null;
+        }
+
+        public static Location LocationById(int id)
+        {
+            foreach(Location localizacao in Locations)
+            {
+                if(localizacao.ID == id)
+                {
+                        return localizacao;
+                }
+            }
+            return null;
+        }
+
+       public static Item ItemById(int id)
+        {
+            foreach(Item item in Items)
+            {
+                if(item.ID == id)
+                {
+                    return item;
                 }
             }
             return null;
