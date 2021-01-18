@@ -1,0 +1,5 @@
+C:\Users\kevin\source\repos\RPGBasico\Engine\bin\Debug\Engine.dll
+C:\Users\kevin\source\repos\RPGBasico\Engine\bin\Debug\Engine.pdb
+C:\Users\kevin\source\repos\RPGBasico\Engine\obj\Debug\Engine.dll
+C:\Users\kevin\source\repos\RPGBasico\Engine\obj\Debug\Engine.pdb
+C:\Users\kevin\source\repos\RPGBasico\Engine\obj\Debug\Engine.csprojAssemblyReference.cache
