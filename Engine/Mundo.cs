@@ -41,6 +41,36 @@ namespace Engine
         public const int LOCATION_ID_BRIDGE = 8;
         public const int LOCATION_ID_SPIDER_FIELD = 9;
 
+        #region Example
+
+        public enum ItemsEnum
+        {
+            ITEM_ID_RUSTY_SWORD = 1,
+            ITEM_ID_RAT_TAIL,
+            ITEM_ID_PIECE_OF_FUR,
+            ITEM_ID_SNAKE_FANG,
+            ITEM_ID_SNAKESKIN,
+            ITEM_ID_CLUB,
+            ITEM_ID_HEALING_POTION,
+            ITEM_ID_SPIDER_FANG,
+            ITEM_ID_SPIDER_SILK,
+            ITEM_ID_ADVENTURER_PASS
+        }
+
+        private static Dictionary<ItemsEnum, Item> itemsDictionary = new Dictionary<ItemsEnum, Item>
+        {
+            {ItemsEnum.ITEM_ID_RUSTY_SWORD, new Weapon(ITEM_ID_RUSTY_SWORD, "Espada enferrujada", "Espadas enferrujada", 0, 5)},
+            {ItemsEnum.ITEM_ID_RAT_TAIL, new Item(ITEM_ID_RAT_TAIL, "Rabo de rato", "Rabos de ratos")}
+        };
+
+        private static void Example()
+        {
+            var a = (Weapon)itemsDictionary[ItemsEnum.ITEM_ID_RUSTY_SWORD];
+            Console.WriteLine(a.Nome);
+        }
+
+        #endregion
+
         static Mundo()
         {
             PopulateItems();
