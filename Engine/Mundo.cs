@@ -59,7 +59,7 @@ namespace Engine
 
         
 
-        private static Dictionary<ItemsEnum, Item> itemsDictionary = new Dictionary<ItemsEnum, Item>
+        private static readonly Dictionary<ItemsEnum, Item> itemsDictionary = new Dictionary<ItemsEnum, Item>
         {
             {ItemsEnum.ITEM_ID_RUSTY_SWORD, new Weapon(ITEM_ID_RUSTY_SWORD, "Espada enferrujada", "Espadas enferrujada", 0, 5)},
             {ItemsEnum.ITEM_ID_RAT_TAIL, new Item(ITEM_ID_RAT_TAIL, "Rabo de rato", "Rabos de ratos")}
@@ -162,24 +162,34 @@ namespace Engine
 
             Location townSquare = new Location(LOCATION_ID_TOWN_SQUARE, "Praça da Cidade", "Você avista uma fonte");
 
-            Location alchemistHut = new Location(LOCATION_ID_ALCHEMIST_HUT, "Cabana do Alquimista   ", "Há muitas plantas estranhas na prateleira.");
-            alchemistHut.QuestsDisponiveis = QuestByID(QUEST_ID_CLEAR_ALCHEMIST_GARDEN);
+            Location alchemistHut = new Location(LOCATION_ID_ALCHEMIST_HUT, "Cabana do Alquimista   ", "Há muitas plantas estranhas na prateleira.")
+            {
+                QuestsDisponiveis = QuestByID(QUEST_ID_CLEAR_ALCHEMIST_GARDEN)
+            };
 
-            Location alchemistsGarden = new Location(LOCATION_ID_ALCHEMISTS_GARDEN, "Jardim do Alquimista", "Há muitas plantas crescendo por aqui.");
-            alchemistsGarden.MonstrosNessaArea = MonstroByID(MONSTER_ID_RAT);
+            Location alchemistsGarden = new Location(LOCATION_ID_ALCHEMISTS_GARDEN, "Jardim do Alquimista", "Há muitas plantas crescendo por aqui.")
+            {
+                MonstrosNessaArea = MonstroByID(MONSTER_ID_RAT)
+            };
 
-            Location farmhouse = new Location(LOCATION_ID_FARMHOUSE, "Casa da Fazenda", "Há uma pequena casa de fazenda com um fazendeiro em frente.");
-            farmhouse.QuestsDisponiveis = QuestByID(QUEST_ID_CLEAR_FARMERS_FIELD);
+            Location farmhouse = new Location(LOCATION_ID_FARMHOUSE, "Casa da Fazenda", "Há uma pequena casa de fazenda com um fazendeiro em frente.")
+            {
+                QuestsDisponiveis = QuestByID(QUEST_ID_CLEAR_FARMERS_FIELD)
+            };
 
-            Location farmersField = new Location(LOCATION_ID_FARM_FIELD, "Campo da Fazenda", "Você ve alguns vegetais crescendo por aqui.");
-            farmersField.MonstrosNessaArea = MonstroByID(MONSTER_ID_SNAKE);
+            Location farmersField = new Location(LOCATION_ID_FARM_FIELD, "Campo da Fazenda", "Você ve alguns vegetais crescendo por aqui.")
+            {
+                MonstrosNessaArea = MonstroByID(MONSTER_ID_SNAKE)
+            };
 
             Location guardPost = new Location(LOCATION_ID_GUARD_POST, "Posto de Guardas", "Há um guarda de aparencia bem forte aqui.", ItemByID(ITEM_ID_ADVENTURER_PASS));
 
             Location bridge = new Location(LOCATION_ID_BRIDGE, "Ponte", "Uma ponte de pedra atravessnado o grande lago.");
 
-            Location spiderField = new Location(LOCATION_ID_SPIDER_FIELD, "Floresta", "Você ve teias de aranha cobrindo as arvores da floresta.");
-            spiderField.MonstrosNessaArea = MonstroByID(MONSTER_ID_GIANT_SPIDER);
+            Location spiderField = new Location(LOCATION_ID_SPIDER_FIELD, "Floresta", "Você ve teias de aranha cobrindo as arvores da floresta.")
+            {
+                MonstrosNessaArea = MonstroByID(MONSTER_ID_GIANT_SPIDER)
+            };
 
             // Link the locations together
             home.LocalizacaoNorte = townSquare;

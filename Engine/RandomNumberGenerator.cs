@@ -17,7 +17,7 @@ namespace Engine
 
             double multiplier = Math.Max(0, (asciiValueOfRandomCharater / 255d) - 0.00000000001d);
 
-            int range = Maximo - Minimo + 1;
+            int range = Minimo - Maximo + 1;
 
             double randomValueInRange = Math.Floor(multiplier * range);
 

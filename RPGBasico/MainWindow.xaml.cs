@@ -11,17 +11,13 @@ namespace RPGBasico
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Player _player;
-        private Monstro _Monstro;
-
-        private Location location;
-
-
+        private readonly Player _player;
+        private Monstro _Monstro;    
         public MainWindow()
         {
             InitializeComponent();
 
-            _player = new Player("Kevin", 1, 2, 3, 4, 5);
+            _player = new Player("Kevin", 10, 10, 0, 0, 1);
 
             MoveTo(Mundo.LocationById(Mundo.LOCATION_ID_HOME));
             _player.Inventario.Add(new ItemInventario(Mundo.ItembyId2(1), 1));
@@ -52,89 +48,94 @@ namespace RPGBasico
             MoveTo(_player.CurrentLocation.LocalizacaoLeste);
         }
 
-        private void btnUsePotion_Click(object sender, RoutedEventArgs e)
+        private void BtnUsePotion_Click(object sender, RoutedEventArgs e)
         {
-            
+            PocaoDeVida pocao = (PocaoDeVida)CboPocoes.SelectedItem;
+
+            _player.Vida += pocao.QuantidadeDeVida;
+
+            if(_player.Vida > _player.VidaMaxima)
+            {
+                _player.Vida = _player.VidaMaxima;
+            }
+
+            RemoveItem(pocao,1);
+
+            RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Você bebeu uma {pocao.Nome} e recebeu {pocao.QuantidadeDeVida}")));
+
+            MonsterHit();
+            RefreshLabels();
         }
 
         private void BtnUseWeapon_Click(object sender, RoutedEventArgs e)
         {
             Weapon CurrentWeapon = (Weapon)CboWeapons.SelectedItem;
-
-            int damageToMonster = RandomNumberGenerator.NumberBetween(CurrentWeapon.DanoMinimo, CurrentWeapon.DanoMaximo);
-
-            _Monstro.Vida -= damageToMonster;
-
-            RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Você hitou o {_Monstro.Nome} com {damageToMonster} de dano")));
-
-            if (_Monstro.Vida <= 0)
+            if(CurrentWeapon != null)
             {
-                RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"")));
-                RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Você derrotou {_Monstro.Nome}")));
+                int damageToMonster = RandomNumberGenerator.NumberBetween(CurrentWeapon.DanoMinimo, CurrentWeapon.DanoMaximo);
 
-                RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Você recebeu {_Monstro.ExperienciaLoot} de experiencia")));
-                RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Vôcê recebeu {_Monstro.DinheiroLoot} de Gold")));
-                _player.Experiencia += _Monstro.ExperienciaLoot;
-                _player.Dinheiro += _Monstro.DinheiroLoot;
+                _Monstro.Vida -= damageToMonster;
 
-                List<ItemInventario> ItemsDroped = new List<ItemInventario>();
+                RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Você hitou o {_Monstro.Nome} com {damageToMonster} de dano")));
 
-                foreach (LootItem lootitem in _Monstro.LootTable)
+                if (_Monstro.Vida <= 0)
                 {
-                    if (RandomNumberGenerator.NumberBetween(1, 100) <= lootitem.DropPercentage)
-                    {
-                        ItemsDroped.Add(new ItemInventario(lootitem.Details, 1));
-                    }
-                }
+                    RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"")));
+                    RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Você derrotou {_Monstro.Nome}")));
 
-                if (ItemsDroped.Count == 0)
-                {
-                    foreach (LootItem item in _Monstro.LootTable)
+                    RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Você recebeu {_Monstro.ExperienciaLoot} de experiencia")));
+                    RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Vôcê recebeu {_Monstro.DinheiroLoot} de Gold")));
+                    _player.Experiencia += _Monstro.ExperienciaLoot;
+                    _player.Dinheiro += _Monstro.DinheiroLoot;
+
+                    List<ItemInventario> ItemsDroped = new List<ItemInventario>();
+
+                    foreach (LootItem lootitem in _Monstro.LootTable)
                     {
-                        if (item.IsDefaultItem)
+                        if (RandomNumberGenerator.NumberBetween(1, 100) <= lootitem.DropPercentage)
                         {
-                            ItemsDroped.Add(new ItemInventario(item.Details, 1));
+                            ItemsDroped.Add(new ItemInventario(lootitem.Details, 1));
                         }
                     }
-                }
 
-                foreach (ItemInventario item in ItemsDroped)
+                    if (ItemsDroped.Count == 0)
+                    {
+                        foreach (LootItem item in _Monstro.LootTable)
+                        {
+                            if (item.IsDefaultItem)
+                            {
+                                ItemsDroped.Add(new ItemInventario(item.Details, 1));
+                            }
+                        }
+                    }
+
+                    foreach (ItemInventario item in ItemsDroped)
+                    {
+                        AddItemToInvetory(item.Details);
+                        if (item.Quantidade == 1)
+                        {
+                            RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Você recebeu {item.Quantidade} {item.Details} ")));
+                        }
+                        else
+                        {
+                            RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Você recebeu {item.Quantidade} {item.Details}")));
+                        }
+                    }
+
+                    RefreshLabels();
+
+                    MoveTo(_player.CurrentLocation);
+
+                }
+                else
                 {
-                    AddItemToInvetory(item.Details);
-                    if (item.Quantidade == 1)
-                    {
-                        RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Você recebeu {item.Quantidade} {item.Details} ")));
-                    }
-                    else
-                    {
-                        RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Você recebeu {item.Quantidade} {item.Details}")));
-                    }
+                    MonsterHit();
                 }
-
-                RefreshLabels();
-
-                MoveTo(_player.CurrentLocation);
-
             }
             else
             {
-                int damageToPlayer = RandomNumberGenerator.NumberBetween(0, _Monstro.DanoMaximo);
-
-                RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"O {_Monstro.Nome} te hitou com {damageToPlayer} de dano")));
-
-                _player.Vida -= damageToPlayer;
-
-                lblVida.Content = _player.Vida.ToString();
-
-                if (_player.Vida <= 0)
-                {
-                    RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Se fudeu o {_Monstro.Nome} te matou otario")));
-
-                    MoveTo(Mundo.LocationById(Mundo.LOCATION_ID_HOME));
-                    RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"E ve se limpa essa merda agora ja que como guerreira você é inutil")));
-                    _player.Vida = _player.VidaMaxima;
-                }
-            }
+                RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Você não selecionou uma Arma")));
+            }            
         }
 
         private void MoveTo(Location NewLocation)
@@ -168,10 +169,11 @@ namespace RPGBasico
                     if (playerquest.Details.ID == CurrentLocation.QuestsDisponiveis.ID)
                     {
                         PlayerHasQuest = true;
-                    }
-                    if (playerquest.IsCompleted)
-                    {
-                        PlayerCompleteQuest = true;
+
+                        if (playerquest.IsCompleted)
+                        {
+                            PlayerCompleteQuest = true;
+                        }
                     }
                 }
 
@@ -223,7 +225,7 @@ namespace RPGBasico
                         {
                             FoundItem = true;
 
-                            if(hqi.Quantidade < qci.Quantidade)
+                            if(hqi.Quantidade >= qci.Quantidade)
                             {
                                 HasTheItems = true;
                                 break;
@@ -242,21 +244,20 @@ namespace RPGBasico
                 {
                     foreach(QuestCompletionItem qci in quest.QuestCompletionItems)
                     {
-                        foreach(ItemInventario item in _player.Inventario)
-                        {
-                            if(item.Details.ID == qci.Details.ID)
-                            {
-                                item.Quantidade -= qci.Quantidade;
-                                break;
-                            }
-                        }
+                        RemoveItem(qci.Details, qci.Quantidade);
                     }
+                     RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Parabéns você completou a quest:{quest.Nome}")));
+                     RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Você recebeu os seguintes items:")));
+                     RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"{quest.ExperienciaLoot} de experiência")));
+                     RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"{quest.DinheiroLoot} de gold")));
+                     RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Você recebeu {quest.Recompensa.Nome}")));                    
 
                     _player.Experiencia += quest.ExperienciaLoot;
                     _player.Dinheiro += quest.DinheiroLoot;
-                    
+                
                     AddItemToInvetory(quest.Recompensa);
                     MarkHasCompleted(quest);
+                    RefreshLabels();
                 }            
         }
         private void AddItemToInvetory(Item itemtoadd)
@@ -294,6 +295,9 @@ namespace RPGBasico
                 Console.WriteLine($"Nome: {item.Details.Nome} Quantidade: {item.Quantidade}");
          
             }
+
+            dgvInvetory.ItemsSource = _player.Inventario;
+            dgvInvetory.Items.Refresh();
         }
         public void RefreshQuestUI()
         {
@@ -302,6 +306,12 @@ namespace RPGBasico
                 Console.WriteLine($"Nome: {quest.Details.Nome} Foi Completa: {quest.IsCompleted}");
 
             }
+            foreach(PlayerQuest quest in _player.Quest)
+            {
+                
+            }
+           // dgvQuest.ItemsSource = _player.Quest;
+            dgvQuest.Items.Refresh();
         }
 
         public void RefreshWeaponUI()
@@ -326,7 +336,12 @@ namespace RPGBasico
             }
             else
             {
+                CboWeapons.Visibility = Visibility.Visible;
+                BtnUseWeapon.Visibility = Visibility.Visible;
+
+                
                 CboWeapons.ItemsSource = weapons;
+               // CboWeapons.DisplayMemberPath = weapons.;
             }
 
             weapons.ForEach(d => Console.WriteLine($"Nome: {d.Nome}"));
@@ -351,13 +366,20 @@ namespace RPGBasico
                 {
                     CboPocoes.Visibility = Visibility.Hidden;
                     btnUsePotion.Visibility = Visibility.Hidden;
+                    CboPocoes.Items.Refresh();
+                }
+                else
+                {
+                    CboPocoes.Visibility = Visibility.Visible;
+                    btnUsePotion.Visibility = Visibility.Visible;
+                    CboPocoes.ItemsSource = pocaodevida;
                 }
             }
 
             pocaodevida.ForEach(d => Console.WriteLine($"Nome: {d.Nome}"));
         }
 
-        public void MonsterAppear(Location CurrentLocation)
+        private void MonsterAppear(Location CurrentLocation)
         {
             CurrentLocation = _player.CurrentLocation;
             
@@ -371,11 +393,6 @@ namespace RPGBasico
                 {
                     _Monstro.LootTable.Add(lootitem);
                 }
-
-                CboWeapons.Visibility = Visibility.Visible;
-                BtnUseWeapon.Visibility = Visibility.Visible;
-                CboPocoes.Visibility = Visibility.Visible;
-                btnUsePotion.Visibility = Visibility.Visible;
             }
             else
             {
@@ -398,6 +415,43 @@ namespace RPGBasico
             RefreshInventoryUI();
             RefreshPotionUI();
             RefreshQuestUI();
+        }
+
+        private void RemoveItem(Item ItemToRemove, int QuantToRemove)
+        {
+            foreach (ItemInventario item in _player.Inventario)
+            {
+                if (item.Details.ID == ItemToRemove.ID)
+                {
+                    item.Quantidade -= QuantToRemove;
+                    
+                    if (item.Quantidade <= 0)
+                    {
+                        _player.Inventario.Remove(item);
+                    }
+                    break;                   
+                }
+            }
+        }
+        
+        private void MonsterHit()
+        {
+            int damageToPlayer = RandomNumberGenerator.NumberBetween(0, _Monstro.DanoMaximo);
+
+            RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"O {_Monstro.Nome} te hitou com {damageToPlayer} de dano")));
+
+            _player.Vida -= damageToPlayer;
+
+            lblVida.Content = _player.Vida.ToString();
+
+            if (_player.Vida <= 0)
+            {
+                RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Se fudeu o {_Monstro.Nome} te matou otario")));
+
+                MoveTo(Mundo.LocationById(Mundo.LOCATION_ID_HOME));
+                RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"E ve se limpa essa merda agora ja que como guerreira você é inutil")));
+                _player.Vida = _player.VidaMaxima;
+            }
         }
     }   
 }
