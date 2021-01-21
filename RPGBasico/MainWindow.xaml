@@ -33,8 +33,8 @@
                 </TransformGroup>
             </Label.RenderTransform>
         </Label>
-        <ComboBox x:Name="CboWeapons" HorizontalAlignment="Left" Margin="502,609,0,49" VerticalAlignment="Center" Width="120" Height="22" Visibility="Hidden"/>
-        <ComboBox x:Name="CboPocoes" HorizontalAlignment="Left" Margin="502,571,0,0" VerticalAlignment="Top" Width="120" Visibility="Hidden" />
+        <ComboBox x:Name="CboWeapons" HorizontalAlignment="Left" Margin="502,571,0,87" VerticalAlignment="Center" Width="120" Height="22"/>
+        <ComboBox x:Name="CboPocoes" HorizontalAlignment="Left" Margin="504,609,0,0" VerticalAlignment="Top" Width="120" />
         <Button x:Name="BtnUseWeapon" Content="Use" HorizontalAlignment="Left" Margin="634,571,0,0" VerticalAlignment="Top" Width="75" Click="BtnUseWeapon_Click" Height="22" />
         <Button x:Name="btnUsePotion" Content="Use" HorizontalAlignment="Left" Margin="634,609,0,0" VerticalAlignment="Top" Width="75" Click="btnUsePotion_Click" Height="22"/>
         <RichTextBox x:Name="RbtMensagem" HorizontalAlignment="Left" Height="286" Margin="359,123,0,0" VerticalAlignment="Top" Width="360" IsReadOnly="True">
