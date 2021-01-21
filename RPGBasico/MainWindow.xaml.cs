@@ -1,4 +1,6 @@
 ﻿using Engine;
+using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Documents;
 
@@ -12,7 +14,8 @@ namespace RPGBasico
         private Player _player;
         private Monstro _Monstro;
 
-        
+        private Location location;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -20,13 +23,11 @@ namespace RPGBasico
             _player = new Player("Kevin", 1, 2, 3, 4, 5);
 
             MoveTo(Mundo.LocationById(Mundo.LOCATION_ID_HOME));
-            _player.Inventario.Add(new ItemInventario(Mundo.ItemById(Mundo.ITEM_ID_RUSTY_SWORD), 1));
-            _player.Quest.Add(new PlayerQuest(Mundo.QuestByID(Mundo.QUEST_ID_CLEAR_ALCHEMIST_GARDEN)));
+            _player.Inventario.Add(new ItemInventario(Mundo.ItembyId2(1), 1));
             lblVida.Content = _player.Vida.ToString();
             lblLevel.Content = _player.Level.ToString();
             lblNome.Content = _player.Nome.ToString();
             lblDinheiro.Content = _player.Dinheiro.ToString();
-
         }
 
         private void BtnNorte_Click(object sender, RoutedEventArgs e)
@@ -51,7 +52,7 @@ namespace RPGBasico
 
         private void btnUsePotion_Click(object sender, RoutedEventArgs e)
         {
-
+            _player.Inventario.Add(new ItemInventario(Mundo.ItembyId2(2), 1));
         }
 
         private void BtnUseWeapon_Click(object sender, RoutedEventArgs e)
@@ -61,8 +62,9 @@ namespace RPGBasico
 
         private void MoveTo(Location NewLocation)
         {
-            _player.CurrentLocation = NewLocation;
+            
 
+            _player.CurrentLocation = NewLocation;
             BtnLeste.IsEnabled = (NewLocation.LocalizacaoLeste != null);
             BtnOeste.IsEnabled = (NewLocation.LocalizacaoOeste != null);
             BtnSul.IsEnabled = (NewLocation.LocalizacaoSul != null);
@@ -71,123 +73,40 @@ namespace RPGBasico
             RbtLocation.Document.Blocks.Clear();
             RbtLocation.Document.Blocks.Add(new Paragraph(new Run(NewLocation.Nome)));
             RbtLocation.Document.Blocks.Add(new Paragraph(new Run(NewLocation.Descricao)));
+           
+            
+            QuestInLocation(NewLocation);
+        }
 
-            if (NewLocation.QuestsDisponiveis != null)
+        private void QuestInLocation(Location CurrentLocation)
+        {
+            bool PlayerHasQuest = false;
+            bool PlayerCompleteQuest = false;
+
+            if(CurrentLocation.QuestsDisponiveis != null)
             {
-                bool PlayerTemQuest = false;
-                bool PlayerCompletouQuest = false;
-
                 foreach (PlayerQuest playerquest in _player.Quest)
                 {
-                    if (playerquest.Details.ID == NewLocation.QuestsDisponiveis.ID)
+                    if (playerquest.Details.ID == CurrentLocation.QuestsDisponiveis.ID)
                     {
-                        PlayerTemQuest = true;
-
-                        if (playerquest.IsCompleted)
-                        {
-                            PlayerCompletouQuest = true;
-                        }
+                        PlayerHasQuest = true;
+                    }
+                    if (playerquest.IsCompleted)
+                    {
+                        PlayerCompleteQuest = true;
                     }
                 }
 
-                if (PlayerTemQuest)
+                if (!PlayerHasQuest)
                 {
-                    if (!PlayerCompletouQuest)
+                    _player.Quest.Add(new PlayerQuest(CurrentLocation.QuestsDisponiveis));
+                    RbtMensagem.Document.Blocks.Add(new Paragraph(new Run("Você recebeu a Quest: " + CurrentLocation.QuestsDisponiveis.Nome)));
+                    RbtMensagem.Document.Blocks.Add(new Paragraph(new Run(CurrentLocation.QuestsDisponiveis.Descricao)));
+                    RbtMensagem.Document.Blocks.Add(new Paragraph(new Run("Para concluir retorne com os seguintes itens:")));
+
+                    foreach (QuestCompletionItem qci in CurrentLocation.QuestsDisponiveis.QuestCompletionItems)
                     {
-                        bool PlayerTemOsItens = false;
-
-                        foreach (QuestCompletionItem qci in NewLocation.QuestsDisponiveis.QuestCompletionItems)
-                        {
-                            bool AchouItemInventario = false;
-
-                            foreach (ItemInventario HasQeIn in _player.Inventario)
-                            {
-                                if (HasQeIn.Details.ID == qci.Details.ID)
-                                {
-                                    AchouItemInventario = true;
-
-                                    if (HasQeIn.Quantidade < qci.Quantidade)
-                                    {
-                                        PlayerTemOsItens = true;
-                                        break;
-                                    }
-
-                                    break;
-                                }
-                            }
-
-                            if (!AchouItemInventario)
-                            {
-                                PlayerTemOsItens = false;
-
-                                break;
-                            }
-                        }
-
-                        if (PlayerTemOsItens)
-                        {
-                            RbtMensagem.Document.Blocks.Add(new Paragraph(new Run("Você completou a quest" + NewLocation.QuestsDisponiveis.Nome)));
-
-                            foreach (QuestCompletionItem qci in NewLocation.QuestsDisponiveis.QuestCompletionItems)
-                            {
-                                foreach (ItemInventario ii in _player.Inventario)
-                                {
-                                    if (ii.Details.ID == qci.Details.ID)
-                                    {
-                                        ii.Quantidade -= qci.Quantidade;
-                                        break;
-                                    }
-                                }
-                            }
-                            RbtMensagem.Document.Blocks.Add(new Paragraph(new Run("Você recebeu:")));
-                            RbtMensagem.Document.Blocks.Add(new Paragraph(new Run(NewLocation.QuestsDisponiveis.Recompensa.ToString())));
-                            RbtMensagem.Document.Blocks.Add(new Paragraph(new Run(NewLocation.QuestsDisponiveis.ExperienciaLoot.ToString())));
-                            RbtMensagem.Document.Blocks.Add(new Paragraph(new Run(NewLocation.QuestsDisponiveis.DinheiroLoot.ToString())));
-                            _player.Experiencia += NewLocation.QuestsDisponiveis.ExperienciaLoot;
-                            _player.Dinheiro += NewLocation.QuestsDisponiveis.DinheiroLoot;
-
-
-                            bool AdicionarItemAoInventario = false;
-
-                            foreach (ItemInventario ii in _player.Inventario)
-                            {
-                                if (ii.Details.ID == NewLocation.QuestsDisponiveis.Recompensa.ID)
-                                {
-                                    ii.Quantidade++;
-
-                                    AdicionarItemAoInventario = true;
-                                    break;
-                                }
-                            }
-
-                            if (!AdicionarItemAoInventario)
-                            {
-                                _player.Inventario.Add(new ItemInventario(NewLocation.QuestsDisponiveis.Recompensa, 1));
-                            }
-
-                            foreach (PlayerQuest pq in _player.Quest)
-                            {
-                                if (pq.Details.ID == NewLocation.QuestsDisponiveis.ID)
-                                {
-                                    pq.IsCompleted = true;
-                                    break;
-                                }
-                            }
-
-                        }
-
-
-                    }
-
-                }
-                else
-                {
-                    RbtMensagem.Document.Blocks.Add(new Paragraph(new Run("Você recebeu a quest: " + NewLocation.QuestsDisponiveis.Nome)));
-                    RbtMensagem.Document.Blocks.Add(new Paragraph(new Run(NewLocation.QuestsDisponiveis.Descricao )));
-                    RbtMensagem.Document.Blocks.Add(new Paragraph(new Run("Para completar, retorne com:")));
-                    foreach(QuestCompletionItem qci in NewLocation.QuestsDisponiveis.QuestCompletionItems)
-                    {
-                        if(qci.Quantidade == 1)
+                        if (qci.Quantidade == 1)
                         {
                             RbtMensagem.Document.Blocks.Add(new Paragraph(new Run(qci.Quantidade.ToString() + " " + qci.Details.Nome)));
                             RbtMensagem.Document.Blocks.Add(new Paragraph(new Run(qci.Quantidade.ToString() + " " + qci.Details.NomePlural)));
@@ -197,70 +116,97 @@ namespace RPGBasico
                             RbtMensagem.Document.Blocks.Add(new Paragraph(new Run(qci.Quantidade.ToString() + " " + qci.Details.NomePlural)));
                         }
                     }
+                    _player.Quest.Add(new PlayerQuest(CurrentLocation.QuestsDisponiveis));
                 }
-
-            }
-
-            if(NewLocation.MonstrosNessaArea != null)
-            {
-                RbtMensagem.Document.Blocks.Add(new Paragraph(new Run("Você encontra um " + NewLocation.MonstrosNessaArea.Nome)));
-                Monstro Monstrinho = Mundo.MonstroByID(NewLocation.MonstrosNessaArea.ID);
-
-                _Monstro = new Monstro(Monstrinho.ID, Monstrinho.Nome, Monstrinho.DanoMaximo, Monstrinho.ExperienciaLoot, Monstrinho.DinheiroLoot, Monstrinho.Vida, Monstrinho.VidaMaxima);
-
-                foreach(LootItem lootitem in Monstrinho.LootTable)
+                else
                 {
-                    _Monstro.LootTable.Add(lootitem);
-                }
-
-                CboWeapons.Visibility = Visibility.Visible;
-                CboPocoes.Visibility = Visibility.Visible;
-                btnUsePotion.Visibility = Visibility.Visible;
-                BtnUseWeapon.Visibility = Visibility.Visible;
+                    QuestCompleteVerify(PlayerCompleteQuest);
+                }                                        
             }
             else
             {
-                _Monstro = null;
-
-                CboWeapons.Visibility = Visibility.Hidden;
-                CboPocoes.Visibility = Visibility.Hidden;
-                btnUsePotion.Visibility = Visibility.Hidden;
-                BtnUseWeapon.Visibility = Visibility.Hidden;
+                Console.WriteLine("Local não tem Quest");
             }
-
-
-
-
-
-           // dgvInvetory.Items.Clear();
-
-
-            foreach(ItemInventario iteminvetario in _player.Inventario)
-            {
-                if (iteminvetario.Quantidade > 0 )
-                {
-                    //dgvInvetory.Items.Add(new object[] {iteminvetario.  });
-                    //dgvInvetory.ItemsSource = _player.Inventario;
-                    // dgvInvetory.(new ItemInventario (iteminvetario.Details,iteminvetario.Quantidade));
-                    dgvInvetory.ItemsSource = _player.Inventario;
-                }
-                
-            }
-
-            dgvQuest.Items.Clear();
-            foreach (PlayerQuest quest in _player.Quest)
-            {
-                    dgvQuest.Items.Add(new object[] {quest.Details,quest.IsCompleted  });
-                    //dgvInvetory.ItemsSource = _player.Inventario;
-                    // dgvInvetory.(new ItemInventario (iteminvetario.Details,iteminvetario.Quantidade));
-                    //dgvInvetory.ItemsSource = _player.Inventario;
-                
-
-            }
-            //dgvQuest.ItemsSource = _player.Quest;
-
-
         }
 
-    }
+        private void QuestCompleteVerify(bool QuestIsCompleted)
+        {
+            bool HasTheItems = false;
+            bool FoundItem = true;
+
+            if (!QuestIsCompleted)
+            {
+                foreach(QuestCompletionItem qci in location.QuestsDisponiveis.QuestCompletionItems)
+                {
+                    foreach(ItemInventario hqi in _player.Inventario)
+                    {
+                        if(hqi.Details.ID == qci.Details.ID)
+                        {
+                            FoundItem = true;
+
+                            if(hqi.Quantidade < qci.Quantidade)
+                            {
+                                HasTheItems = true;
+                                break;
+                            }
+                            break;
+                        }
+                    }
+
+                    if (!FoundItem)
+                    {
+                        break;
+                    }
+                }
+
+                if (HasTheItems)
+                {
+                    foreach(QuestCompletionItem qci in location.QuestsDisponiveis.QuestCompletionItems)
+                    {
+                        foreach(ItemInventario item in _player.Inventario)
+                        {
+                            if(item.Details.ID == qci.Details.ID)
+                            {
+                                item.Quantidade -= qci.Quantidade;
+                                break;
+                            }
+                        }
+                    }
+
+                    _player.Experiencia += location.QuestsDisponiveis.ExperienciaLoot;
+                    _player.Dinheiro += location.QuestsDisponiveis.DinheiroLoot;
+                    
+                    AddItemToInvetory(location.QuestsDisponiveis.Recompensa);
+                    MarkHasCompleted(location.QuestsDisponiveis);
+                }
+            }
+        }
+        private void AddItemToInvetory(Item itemtoadd)
+        {
+            foreach(ItemInventario item in _player.Inventario)
+            {
+                if(item.Details.ID == itemtoadd.ID)
+                {
+                    item.Quantidade++;
+
+                    return;
+                }
+            }
+
+            _player.Inventario.Add(new ItemInventario(itemtoadd, 1));
+        }
+
+        private void MarkHasCompleted(Quest quest)
+        {
+            foreach(PlayerQuest pq in _player.Quest)
+            {
+                if(pq.Details.ID == quest.ID)
+                {
+                    pq.IsCompleted = true;
+
+                    return;
+                }
+            }
+        }
+    }    
 }

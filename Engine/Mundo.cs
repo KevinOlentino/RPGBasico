@@ -57,16 +57,21 @@ namespace Engine
             ITEM_ID_ADVENTURER_PASS
         }
 
+        
+
         private static Dictionary<ItemsEnum, Item> itemsDictionary = new Dictionary<ItemsEnum, Item>
         {
             {ItemsEnum.ITEM_ID_RUSTY_SWORD, new Weapon(ITEM_ID_RUSTY_SWORD, "Espada enferrujada", "Espadas enferrujada", 0, 5)},
             {ItemsEnum.ITEM_ID_RAT_TAIL, new Item(ITEM_ID_RAT_TAIL, "Rabo de rato", "Rabos de ratos")}
         };
 
-        private static void Example()
+        public static Item ItembyId2(int id)
         {
-            var a = (Weapon)itemsDictionary[ItemsEnum.ITEM_ID_RUSTY_SWORD];
-            Console.WriteLine(a.Nome);
+            if (itemsDictionary.ContainsKey((ItemsEnum)id))
+                return itemsDictionary[(ItemsEnum)id];
+
+            return null;
+
         }
 
         #endregion
