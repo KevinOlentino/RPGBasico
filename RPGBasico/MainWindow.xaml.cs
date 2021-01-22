@@ -1,6 +1,7 @@
 ﻿using Engine;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 using System.Windows.Documents;
 
@@ -11,21 +12,27 @@ namespace RPGBasico
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly Player _player;
-        private Monstro _Monstro;    
+        private Player _player;
+        private Monstro _Monstro;
+
+        private const string PLAYER_DATA_FILE_NAME = "PlayerData.xml";
+
         public MainWindow()
         {
+
             InitializeComponent();
 
-            _player = new Player("Kevin", 10, 10, 0, 0, 1);
+            if (File.Exists(PLAYER_DATA_FILE_NAME))
+            {
+                _player = Player.CreatePlayerFromXMLString(File.ReadAllText(PLAYER_DATA_FILE_NAME));
+            }
+            else
+            {
+                _player = Player.CreateDefaultPlayer();
+            }
 
-            MoveTo(Mundo.LocationById(Mundo.LOCATION_ID_HOME));
-            _player.Inventario.Add(new ItemInventario(Mundo.ItembyId2(1), 1));
-            lblVida.Content = _player.Vida.ToString();
-            lblLevel.Content = _player.Level.ToString();
-            lblNome.Content = _player.Nome.ToString();
-            lblDinheiro.Content = _player.Dinheiro.ToString();
-
+            MoveTo(_player.CurrentLocation);
+            RefreshLabels();
         }
 
         private void BtnNorte_Click(object sender, RoutedEventArgs e)
@@ -59,9 +66,9 @@ namespace RPGBasico
                 _player.Vida = _player.VidaMaxima;
             }
 
-            RemoveItem(pocao,1);
+            _player.RemoveItem(pocao,1);
 
-            RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Você bebeu uma {pocao.Nome} e recebeu {pocao.QuantidadeDeVida}")));
+            WriteMessages($"Você bebeu uma {pocao.Nome} e recebeu {pocao.QuantidadeDeVida}");
 
             MonsterHit();
             RefreshLabels();
@@ -76,15 +83,15 @@ namespace RPGBasico
 
                 _Monstro.Vida -= damageToMonster;
 
-                RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Você hitou o {_Monstro.Nome} com {damageToMonster} de dano")));
+                WriteMessages($"Você hitou o {_Monstro.Nome} com {damageToMonster} de dano");
 
                 if (_Monstro.Vida <= 0)
                 {
-                    RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"")));
-                    RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Você derrotou {_Monstro.Nome}")));
+                    WriteMessages($"");
+                    WriteMessages($"Você derrotou {_Monstro.Nome}");
 
-                    RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Você recebeu {_Monstro.ExperienciaLoot} de experiencia")));
-                    RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Vôcê recebeu {_Monstro.DinheiroLoot} de Gold")));
+                    WriteMessages($"Você recebeu {_Monstro.ExperienciaLoot} de experiencia");
+                    WriteMessages($"Vôcê recebeu {_Monstro.DinheiroLoot} de Gold");
                     _player.Experiencia += _Monstro.ExperienciaLoot;
                     _player.Dinheiro += _Monstro.DinheiroLoot;
 
@@ -111,14 +118,14 @@ namespace RPGBasico
 
                     foreach (ItemInventario item in ItemsDroped)
                     {
-                        AddItemToInvetory(item.Details);
+                        _player.AddItemToInvetory(item.Details);
                         if (item.Quantidade == 1)
                         {
-                            RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Você recebeu {item.Quantidade} {item.Details} ")));
+                            WriteMessages($"Você recebeu {item.Quantidade} {item.Details} ");
                         }
                         else
                         {
-                            RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Você recebeu {item.Quantidade} {item.Details}")));
+                            WriteMessages($"Você recebeu {item.Quantidade} {item.Details}");
                         }
                     }
 
@@ -134,7 +141,7 @@ namespace RPGBasico
             }
             else
             {
-                RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Você não selecionou uma Arma")));
+                WriteMessages("Você não selecionou uma Arma");
             }            
         }
 
@@ -155,6 +162,7 @@ namespace RPGBasico
             RefreshLabels();
             QuestInLocation(NewLocation);
             MonsterAppear(NewLocation);
+            
         }
 
         private void QuestInLocation(Location CurrentLocation)
@@ -180,20 +188,20 @@ namespace RPGBasico
                 if (!PlayerHasQuest)
                 {
                     _player.Quest.Add(new PlayerQuest(CurrentLocation.QuestsDisponiveis));
-                    RbtMensagem.Document.Blocks.Add(new Paragraph(new Run("Você recebeu a Quest: " + CurrentLocation.QuestsDisponiveis.Nome)));
-                    RbtMensagem.Document.Blocks.Add(new Paragraph(new Run(CurrentLocation.QuestsDisponiveis.Descricao)));
-                    RbtMensagem.Document.Blocks.Add(new Paragraph(new Run("Para concluir retorne com os seguintes itens:")));
+                    WriteMessages("Você recebeu a Quest: " + CurrentLocation.QuestsDisponiveis.Nome);
+                    WriteMessages(CurrentLocation.QuestsDisponiveis.Descricao);
+                    WriteMessages("Para concluir retorne com os seguintes itens:");
 
                     foreach (QuestCompletionItem qci in CurrentLocation.QuestsDisponiveis.QuestCompletionItems)
                     {
                         if (qci.Quantidade == 1)
                         {
-                            RbtMensagem.Document.Blocks.Add(new Paragraph(new Run(qci.Quantidade.ToString() + " " + qci.Details.Nome)));
-                            RbtMensagem.Document.Blocks.Add(new Paragraph(new Run(qci.Quantidade.ToString() + " " + qci.Details.NomePlural)));
+                            WriteMessages(qci.Quantidade.ToString() + " " + qci.Details.Nome);
+                            WriteMessages(qci.Quantidade.ToString() + " " + qci.Details.NomePlural);
                         }
                         else
                         {
-                            RbtMensagem.Document.Blocks.Add(new Paragraph(new Run(qci.Quantidade.ToString() + " " + qci.Details.NomePlural)));
+                            WriteMessages($"{qci.Quantidade.ToString()} {qci.Details.NomePlural}");
                         }
                     }                    
                 }
@@ -244,35 +252,21 @@ namespace RPGBasico
                 {
                     foreach(QuestCompletionItem qci in quest.QuestCompletionItems)
                     {
-                        RemoveItem(qci.Details, qci.Quantidade);
+                        _player.RemoveItem(qci.Details, qci.Quantidade);
                     }
-                     RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Parabéns você completou a quest:{quest.Nome}")));
-                     RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Você recebeu os seguintes items:")));
-                     RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"{quest.ExperienciaLoot} de experiência")));
-                     RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"{quest.DinheiroLoot} de gold")));
-                     RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Você recebeu {quest.Recompensa.Nome}")));                    
-
+                     WriteMessages($"Parabéns você completou a quest:{quest.Nome}");
+                     WriteMessages($"Você recebeu os seguintes items:");
+                     WriteMessages($"{quest.ExperienciaLoot} de experiência");
+                     WriteMessages($"{quest.DinheiroLoot} de gold");
+                     WriteMessages($"Você recebeu {quest.Recompensa.Nome}");                    
+                    
                     _player.Experiencia += quest.ExperienciaLoot;
                     _player.Dinheiro += quest.DinheiroLoot;
                 
-                    AddItemToInvetory(quest.Recompensa);
+                    _player.AddItemToInvetory(quest.Recompensa);
                     MarkHasCompleted(quest);
                     RefreshLabels();
                 }            
-        }
-        private void AddItemToInvetory(Item itemtoadd)
-        {
-            foreach(ItemInventario item in _player.Inventario)
-            {
-                if(item.Details.ID == itemtoadd.ID)
-                {
-                    item.Quantidade++;
-
-                    return;
-                }
-            }
-
-            _player.Inventario.Add(new ItemInventario(itemtoadd, 1));
         }
 
         private void MarkHasCompleted(Quest quest)
@@ -385,7 +379,8 @@ namespace RPGBasico
             
             if(CurrentLocation.MonstrosNessaArea != null)
             {
-                RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Você encontrou um {CurrentLocation.MonstrosNessaArea.Nome}")));
+                WriteMessages($"Você encontrou um {CurrentLocation.MonstrosNessaArea.Nome}");
+
                 Monstro monstro = Mundo.MonstroByID(CurrentLocation.MonstrosNessaArea.ID);
                 _Monstro = new Monstro(monstro.ID, monstro.Nome, monstro.DanoMaximo, monstro.ExperienciaLoot, monstro.DinheiroLoot, monstro.Vida, monstro.VidaMaxima);
 
@@ -407,6 +402,7 @@ namespace RPGBasico
 
         public void RefreshLabels()
         {
+            lblNome.Content = _player.Nome.ToString();
             lblDinheiro.Content = _player.Dinheiro.ToString();
             lblVida.Content = _player.Vida.ToString();
             lblLevel.Content = _player.Level.ToString();
@@ -416,29 +412,12 @@ namespace RPGBasico
             RefreshPotionUI();
             RefreshQuestUI();
         }
-
-        private void RemoveItem(Item ItemToRemove, int QuantToRemove)
-        {
-            foreach (ItemInventario item in _player.Inventario)
-            {
-                if (item.Details.ID == ItemToRemove.ID)
-                {
-                    item.Quantidade -= QuantToRemove;
-                    
-                    if (item.Quantidade <= 0)
-                    {
-                        _player.Inventario.Remove(item);
-                    }
-                    break;                   
-                }
-            }
-        }
         
         private void MonsterHit()
         {
             int damageToPlayer = RandomNumberGenerator.NumberBetween(0, _Monstro.DanoMaximo);
 
-            RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"O {_Monstro.Nome} te hitou com {damageToPlayer} de dano")));
+            WriteMessages($"O {_Monstro.Nome} te hitou com {damageToPlayer} de dano");
 
             _player.Vida -= damageToPlayer;
 
@@ -446,12 +425,22 @@ namespace RPGBasico
 
             if (_player.Vida <= 0)
             {
-                RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"Se fudeu o {_Monstro.Nome} te matou otario")));
-
+                WriteMessages($"Se fudeu o {_Monstro.Nome} te matou otario");                
                 MoveTo(Mundo.LocationById(Mundo.LOCATION_ID_HOME));
-                RbtMensagem.Document.Blocks.Add(new Paragraph(new Run($"E ve se limpa essa merda agora ja que como guerreira você é inutil")));
+                WriteMessages($"E ve se limpa essa merda agora ja que como guerreira você é inutil");
                 _player.Vida = _player.VidaMaxima;
             }
+        }
+
+        private void WriteMessages(String Texto)
+        {
+            RbtMensagem.Document.Blocks.Add(new Paragraph(new Run(Texto)));
+            RbtMensagem.ScrollToEnd();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            File.WriteAllText(PLAYER_DATA_FILE_NAME, _player.ToXmlString());
         }
     }   
 }

@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:RPGBasico"
         xmlns:Properties="clr-namespace:RPGBasico.Properties" x:Class="RPGBasico.MainWindow"
         mc:Ignorable="d"
-        Title="O alto da colina" Height="690" Width="735" WindowStartupLocation="CenterScreen">
-    <Grid Margin="0,0,-0.2,-20">
+        Title="O alto da colina" Height="690" Width="735" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
+    <Grid x:Name="___Sem_Nome_" Margin="0,0,-0.2,-20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
@@ -45,6 +45,5 @@
         <RichTextBox x:Name="RbtLocation" HorizontalAlignment="Left" Height="105" Margin="359,13,0,0" VerticalAlignment="Top" Width="360" IsReadOnly="True" IsUndoEnabled="False">
             <FlowDocument/>
         </RichTextBox>
-
     </Grid>
 </Window>
