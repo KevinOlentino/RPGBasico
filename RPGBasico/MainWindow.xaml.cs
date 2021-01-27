@@ -14,6 +14,7 @@ namespace RPGBasico
     {
         private Player _player;
         private Monstro _Monstro;
+        private int Level;
 
         private const string PLAYER_DATA_FILE_NAME = "PlayerData.xml";
 
@@ -32,7 +33,9 @@ namespace RPGBasico
             }
 
             MoveTo(_player.CurrentLocation);
-            RefreshLabels();
+            
+            DataContext = _player;
+            Level = _player.Level;
         }
 
         private void BtnNorte_Click(object sender, RoutedEventArgs e)
@@ -58,19 +61,26 @@ namespace RPGBasico
         private void BtnUsePotion_Click(object sender, RoutedEventArgs e)
         {
             PocaoDeVida pocao = (PocaoDeVida)CboPocoes.SelectedItem;
+            if (pocao != null)
+            {
+                _player.Vida += pocao.QuantidadeDeVida;
 
-            _player.Vida += pocao.QuantidadeDeVida;
+                _player.RemoveItem(pocao, 1);
+
+                WriteMessages($"Você bebeu uma {pocao.Nome} e recebeu {pocao.QuantidadeDeVida}");
+
+                MonsterHit();
+            }
+            else
+            {
+                WriteMessages($"Você não selecionou uma poção!");
+            }
 
             if(_player.Vida > _player.VidaMaxima)
             {
                 _player.Vida = _player.VidaMaxima;
             }
 
-            _player.RemoveItem(pocao,1);
-
-            WriteMessages($"Você bebeu uma {pocao.Nome} e recebeu {pocao.QuantidadeDeVida}");
-
-            MonsterHit();
             RefreshLabels();
         }
 
@@ -281,36 +291,9 @@ namespace RPGBasico
                 }
             }
         }
-
-        public void RefreshInventoryUI()
-        {
-            foreach(ItemInventario item in _player.Inventario)
-            {
-                Console.WriteLine($"Nome: {item.Details.Nome} Quantidade: {item.Quantidade}");
-         
-            }
-
-            dgvInvetory.ItemsSource = _player.Inventario;
-            dgvInvetory.Items.Refresh();
-        }
-        public void RefreshQuestUI()
-        {
-            foreach (PlayerQuest quest in _player.Quest)
-            {
-                Console.WriteLine($"Nome: {quest.Details.Nome} Foi Completa: {quest.IsCompleted}");
-
-            }
-            foreach(PlayerQuest quest in _player.Quest)
-            {
-                
-            }
-           // dgvQuest.ItemsSource = _player.Quest;
-            dgvQuest.Items.Refresh();
-        }
-
         public void RefreshWeaponUI()
         {
-            List<Weapon> weapons = new List<Weapon>();
+           /* List<Weapon> weapons = new List<Weapon>();
             weapons.Clear();
 
             foreach(ItemInventario item in _player.Inventario)
@@ -322,8 +305,8 @@ namespace RPGBasico
                         weapons.Add((Weapon)item.Details);
                     }
                 }
-            }
-            if(weapons.Count == 0)
+            }*/
+            if(_player.Weapons.Count == 0)
             {
                 CboWeapons.Visibility = Visibility.Hidden;
                 BtnUseWeapon.Visibility = Visibility.Hidden;
@@ -334,11 +317,11 @@ namespace RPGBasico
                 BtnUseWeapon.Visibility = Visibility.Visible;
 
                 
-                CboWeapons.ItemsSource = weapons;
+               // CboWeapons.ItemsSource = weapons;
                // CboWeapons.DisplayMemberPath = weapons.;
             }
 
-            weapons.ForEach(d => Console.WriteLine($"Nome: {d.Nome}"));
+            _player.Weapons.ForEach(d => Console.WriteLine($"Nome: {d.Nome}"));
         }
 
         public void RefreshPotionUI()
@@ -402,15 +385,10 @@ namespace RPGBasico
 
         public void RefreshLabels()
         {
-            lblNome.Content = _player.Nome.ToString();
-            lblDinheiro.Content = _player.Dinheiro.ToString();
-            lblVida.Content = _player.Vida.ToString();
-            lblLevel.Content = _player.Level.ToString();
+            LevelChanged();
 
             RefreshWeaponUI();
-            RefreshInventoryUI();
             RefreshPotionUI();
-            RefreshQuestUI();
         }
         
         private void MonsterHit()
@@ -421,7 +399,7 @@ namespace RPGBasico
 
             _player.Vida -= damageToPlayer;
 
-            lblVida.Content = _player.Vida.ToString();
+           // lblVida.Content = _player.Vida.ToString();
 
             if (_player.Vida <= 0)
             {
@@ -441,6 +419,17 @@ namespace RPGBasico
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             File.WriteAllText(PLAYER_DATA_FILE_NAME, _player.ToXmlString());
+        }
+
+        public void LevelChanged()
+        {
+            if (Level != _player.Level)
+            {
+                _player.Vida = _player.Level * 10;
+                _player.VidaMaxima = _player.Vida;
+                Level = _player.Level;
+            }
+
         }
     }   
 }

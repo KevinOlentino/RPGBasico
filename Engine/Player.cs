@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Xml;
 
 namespace Engine
@@ -7,21 +9,57 @@ namespace Engine
     public class Player : LivingCreatures
     {
         public string Nome { get; set; }     
-        public int Experiencia { get; set; }
-        public int Dinheiro { get; set; }
-        public int Level { get { return ((Experiencia / 100) + 1); }     }
+        public int Experiencia { get {return _Experiencia; } 
+            set {
+                _Experiencia = value;
+                OnPropertyChanged("Experiencia");
+                OnPropertyChanged("Level");
+            } 
+        }
+        public int _Experiencia;
+
+        public int Dinheiro { get { return _Dinheiro; }
+            set
+            {
+                _Dinheiro = value;
+                OnPropertyChanged("Dinheiro");  
+            }
+        }
+
+        public int _Dinheiro;
+        public int Level { get { return ((Experiencia / 100) + 1); }   
+        }
         public Location CurrentLocation { get; set; }
-        public List<ItemInventario> Inventario { get; set; }
-        public List<PlayerQuest> Quest { get; set; }
+        public BindingList<ItemInventario> Inventario { get; set; }
+        public BindingList<PlayerQuest> Quest { get; set; }
+
+        public List<Weapon> Weapons {
+            get { return Inventario.Where(x => x.Details is Weapon).Select(x => x.Details as Weapon).ToList(); } }
+
+        public List<PocaoDeVida> Pocao
+        {
+            get { return Inventario.Where(x => x.Details is PocaoDeVida).Select(x => x.Details as PocaoDeVida).ToList(); }
+        }
 
         public Player(string nome, int vida, int vidamaxima, int dinheiro, int experiencia) : base(vida, vidamaxima)
         {
             Nome = nome;
             Experiencia = experiencia;
             Dinheiro = dinheiro;
+            Inventario = new BindingList<ItemInventario>();
+            Quest = new BindingList<PlayerQuest>();
+        }
 
-            Inventario = new List<ItemInventario>();
-            Quest = new List<PlayerQuest>();
+        private void RaiseInventoryChangedEvent(Item item)
+        {
+            if(item is Weapon)
+            {
+                OnPropertyChanged("Weapons");               
+            }
+            if(item is PocaoDeVida)
+            {
+                OnPropertyChanged("Potions");
+            }
         }
 
         public static Player CreateDefaultPlayer()
@@ -133,8 +171,8 @@ namespace Engine
                 Items.AppendChild(inventarioItem);
             }
 
-            XmlNode Quests = PlayerData.CreateElement("PlayerQuests");
-            player.AppendChild(Quests);
+            XmlNode PlayerQuests = PlayerData.CreateElement("PlayerQuests");
+            player.AppendChild(PlayerQuests);
 
             foreach (PlayerQuest quest in this.Quest)
             {
@@ -148,41 +186,38 @@ namespace Engine
                 isCompletedAttribute.Value = quest.IsCompleted.ToString();
                 PlayerQuest.Attributes.Append(isCompletedAttribute);
 
-                player.AppendChild(PlayerQuest);
+                PlayerQuests.AppendChild(PlayerQuest);
             }
 
             return PlayerData.InnerXml;
         }
         public void RemoveItem(Item ItemToRemove, int QuantToRemove)
         {
-            foreach (ItemInventario item in this.Inventario)
+            ItemInventario item = Inventario.SingleOrDefault(i => i.Details.ID == ItemToRemove.ID);
+            item.Quantidade -= QuantToRemove;
+            
+            if(item.Quantidade <= 0)
             {
-                if (item.Details.ID == ItemToRemove.ID)
-                {
-                    item.Quantidade -= QuantToRemove;
-
-                    if (item.Quantidade <= 0)
-                    {
-                        this.Inventario.Remove(item);
-                    }
-                    break;
-                }
+                Inventario.Remove(item);
             }
+
+            RaiseInventoryChangedEvent(ItemToRemove);
         }
 
         public void AddItemToInvetory(Item itemtoadd)
         {
-            foreach (ItemInventario item in this.Inventario)
-            {
-                if (item.Details.ID == itemtoadd.ID)
-                {
-                    item.Quantidade++;
+            ItemInventario item = Inventario.SingleOrDefault(i => i.Details.ID == itemtoadd.ID);
 
-                    return;
-                }
+            if(item == null)
+            {
+                Inventario.Add(new ItemInventario(itemtoadd, 1));
+            }
+            else
+            {
+                item.Quantidade++;
             }
 
-            this.Inventario.Add(new ItemInventario(itemtoadd, 1));
+            RaiseInventoryChangedEvent(itemtoadd);
         }
 
     }

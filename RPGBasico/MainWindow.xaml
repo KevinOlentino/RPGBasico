@@ -18,32 +18,37 @@
         <Label x:Name="Nome" Content="Nome:" HorizontalAlignment="Left" Height="26" Margin="10,10,0,0" VerticalAlignment="Top" Width="47"/>
         <Label x:Name="Dinheiro" Content="Dinheiro:" HorizontalAlignment="Left" Height="26" Margin="10,36,0,0" VerticalAlignment="Top" Width="56"/>
         <Label x:Name="Vida" Content="Vida:" HorizontalAlignment="Left" Height="26" Margin="10,62,0,0" VerticalAlignment="Top" Width="47"/>
-        <Label x:Name="lblNome" Content="" HorizontalAlignment="Left" Height="26" Margin="66,10,0,0" VerticalAlignment="Top" Width="52"/>
-        <Label x:Name="lblDinheiro" Content="" HorizontalAlignment="Left" Height="26" Margin="71,36,0,0" VerticalAlignment="Top" Width="52"/>
-        <Label x:Name="lblVida" Content="" HorizontalAlignment="Left" Height="26" Margin="57,62,0,0" VerticalAlignment="Top" Width="52"/>
+        <Label x:Name="lblNome" Content="{Binding Path=Nome, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="26" Margin="57,10,0,0" VerticalAlignment="Top" Width="88"/>
+        <Label x:Name="lblDinheiro" Content="{Binding Path=Dinheiro, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="26" Margin="71,36,0,0" VerticalAlignment="Top" Width="52"/>
+        <Label x:Name="lblVida" Content="{Binding Path=Vida, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="26" Margin="57,62,0,0" VerticalAlignment="Top" Width="52"/>
         <Label x:Name="label4" Content="Level:" HorizontalAlignment="Left" Height="26" Margin="10,88,0,0" VerticalAlignment="Top" Width="47"/>
-        <Label x:Name="lblLevel" Content="" HorizontalAlignment="Left" Height="26" Margin="57,88,0,0" VerticalAlignment="Top" Width="52"/>
-        <Label Content="Select Action" HorizontalAlignment="Left" Margin="635,534,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Width="82">
-            <Label.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="-0.212"/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </Label.RenderTransform>
-        </Label>
-        <ComboBox x:Name="CboWeapons" HorizontalAlignment="Left" Margin="502,571,0,87" VerticalAlignment="Center" Width="120" Height="22"/>
-        <ComboBox x:Name="CboPocoes" HorizontalAlignment="Left" Margin="504,609,0,0" VerticalAlignment="Top" Width="120" />
+        <Label x:Name="lblLevel" Content="{Binding Path=Level, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="26" Margin="57,88,0,0" VerticalAlignment="Top" Width="52"/>
+        <Label Content="Select Action" HorizontalAlignment="Left" Margin="635,534,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Width="82"/>
+        <ComboBox x:Name="CboWeapons" DisplayMemberPath="Nome" HorizontalAlignment="Left" Margin="485,571,0,87" VerticalAlignment="Center" Width="137" Height="22" ItemsSource="{Binding Weapons}"/>
+
+        <ComboBox x:Name="CboPocoes" DisplayMemberPath="Nome" HorizontalAlignment="Left" Margin="485,609,0,0" VerticalAlignment="Top" Width="137" Height="22" ItemsSource="{Binding Pocao}"/>
         <Button x:Name="BtnUseWeapon" Content="Use" HorizontalAlignment="Left" Margin="634,571,0,0" VerticalAlignment="Top" Width="75" Click="BtnUseWeapon_Click" Height="22" />
         <Button x:Name="btnUsePotion" Content="Use" HorizontalAlignment="Left" Margin="634,609,0,0" VerticalAlignment="Top" Width="75" Click="BtnUsePotion_Click" Height="22"/>
         <RichTextBox x:Name="RbtMensagem" HorizontalAlignment="Left" Height="286" Margin="359,123,0,0" VerticalAlignment="Top" Width="360" IsReadOnly="True">
             <FlowDocument/>
         </RichTextBox>
-        <DataGrid x:Name="dgvInvetory" HorizontalAlignment="Left" Height="197" Margin="10,129,0,0" VerticalAlignment="Top" Width="324" IsReadOnly="True"/>
-        <DataGrid x:Name="dgvQuest" HorizontalAlignment="Left" Height="140" Margin="10,379,0,0" VerticalAlignment="Top" Width="324" IsReadOnly="True" Uid="U"/>
+        <DataGrid x:Name="dgvInvetory" HorizontalAlignment="Left" Height="197" Margin="10,129,0,0" VerticalAlignment="Top" Width="324" IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding Inventario}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Descricao, UpdateSourceTrigger=PropertyChanged}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Descricao" Width="220"/>
+                <DataGridTextColumn Binding="{Binding Quantidade, UpdateSourceTrigger=PropertyChanged}" ClipboardContentBinding="{x:Null}" Header="Quantidade" Width="80"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <DataGrid x:Name="dgvQuest" HorizontalAlignment="Left" Height="197" Margin="10,379,0,0" VerticalAlignment="Top" Width="324" IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding Quest}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Details.Nome, UpdateSourceTrigger=PropertyChanged}" ClipboardContentBinding="{x:Null}" Header="Nome" Width="240"/>
+                <DataGridCheckBoxColumn Binding="{Binding IsCompleted, UpdateSourceTrigger=PropertyChanged}" ClipboardContentBinding="{x:Null}" Header="Completa?" CanUserSort="False" CanUserReorder="False" />
+            </DataGrid.Columns>
+        </DataGrid>
+
         <RichTextBox x:Name="RbtLocation" HorizontalAlignment="Left" Height="105" Margin="359,13,0,0" VerticalAlignment="Top" Width="360" IsReadOnly="True" IsUndoEnabled="False">
             <FlowDocument/>
         </RichTextBox>
+        <Label x:Name="Experiencia" Content="Experiencia:" HorizontalAlignment="Left" Height="26" Margin="158,10,0,0" VerticalAlignment="Top" Width="71"/>
+        <Label x:Name="lblExperiencia" Content="{Binding Path=Experiencia, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="26" Margin="234,10,0,0" VerticalAlignment="Top" Width="91"/>
     </Grid>
 </Window>
