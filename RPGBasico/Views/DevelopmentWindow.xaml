@@ -9,7 +9,7 @@
     <Grid>
 
         <WrapPanel x:Name="HearthUI" HorizontalAlignment="Left" Height="25" Margin="105,10,0,0" VerticalAlignment="Top" Width="150" ItemWidth="30">
-            <Image HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="25" Source="/RPGBasico;component/Icons/Heart.png"/>
+            <Image Height="25" VerticalAlignment="Top" Source="/RPGBasico;component/Icons/Heart.png" Margin="0,0,5.4,0"/>
             <Image HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="25" Source="/RPGBasico;component/Icons/Heart.png"/>
             <Image HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="25" Source="/RPGBasico;component/Icons/Heart.png"/>
             <Image HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="25" Source="/RPGBasico;component/Icons/Heart.png"/>

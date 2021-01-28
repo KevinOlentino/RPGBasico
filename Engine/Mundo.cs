@@ -86,7 +86,8 @@ namespace Engine
 
         private static void PopulateItems()
         {
-            Items.Add(new Weapon(ITEM_ID_RUSTY_SWORD, "Espada enferrujada", "Espadas enferrujada", 0, 5));
+            Items.Add(new Weapon(ITEM_ID_RUSTY_SWORD, "Espada enferrujada", "Espadas enferrujada", 5, 0));
+            Items.Add(new Weapon(11, "Espada de Ferro", "Espadas de Ferro", 10, 2));
             Items.Add(new Item(ITEM_ID_RAT_TAIL, "Rabo de rato", "Rabos de ratos"));
             Items.Add(new Item(ITEM_ID_PIECE_OF_FUR, "Pedaço de pele", "Pedaços de pele"));
             Items.Add(new Item(ITEM_ID_SNAKE_FANG, "Presa de cobra", "Presas de cobra"));

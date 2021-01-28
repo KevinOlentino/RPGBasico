@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 
 namespace RPGBasico
@@ -131,11 +132,11 @@ namespace RPGBasico
                         _player.AddItemToInvetory(item.Details);
                         if (item.Quantidade == 1)
                         {
-                            WriteMessages($"Você recebeu {item.Quantidade} {item.Details} ");
+                            WriteMessages($"Você recebeu {item.Quantidade} {item.Details.Nome} ");
                         }
                         else
                         {
-                            WriteMessages($"Você recebeu {item.Quantidade} {item.Details}");
+                            WriteMessages($"Você recebeu {item.Quantidade} {item.Details.Nome}");
                         }
                     }
 
@@ -291,21 +292,9 @@ namespace RPGBasico
                 }
             }
         }
+
         public void RefreshWeaponUI()
         {
-           /* List<Weapon> weapons = new List<Weapon>();
-            weapons.Clear();
-
-            foreach(ItemInventario item in _player.Inventario)
-            {
-                if(item.Details is Weapon)
-                {
-                    if(item.Quantidade > 0)
-                    {
-                        weapons.Add((Weapon)item.Details);
-                    }
-                }
-            }*/
             if(_player.Weapons.Count == 0)
             {
                 CboWeapons.Visibility = Visibility.Hidden;
@@ -315,45 +304,21 @@ namespace RPGBasico
             {
                 CboWeapons.Visibility = Visibility.Visible;
                 BtnUseWeapon.Visibility = Visibility.Visible;
-
-                
-               // CboWeapons.ItemsSource = weapons;
-               // CboWeapons.DisplayMemberPath = weapons.;
             }
-
-            _player.Weapons.ForEach(d => Console.WriteLine($"Nome: {d.Nome}"));
         }
 
         public void RefreshPotionUI()
         {
-            List<PocaoDeVida> pocaodevida = new List<PocaoDeVida>();
-            pocaodevida.Clear();
-
-            foreach(ItemInventario item in _player.Inventario)
-            {
-                if(item.Details is PocaoDeVida)
-                {
-                    if(item.Quantidade > 0)
-                    {
-                        pocaodevida.Add((PocaoDeVida)item.Details);
-                    }
-                }
-
-                if(pocaodevida.Count == 0)
+                if(_player.Pocao.Count == 0)
                 {
                     CboPocoes.Visibility = Visibility.Hidden;
                     btnUsePotion.Visibility = Visibility.Hidden;
-                    CboPocoes.Items.Refresh();
                 }
                 else
                 {
                     CboPocoes.Visibility = Visibility.Visible;
                     btnUsePotion.Visibility = Visibility.Visible;
-                    CboPocoes.ItemsSource = pocaodevida;
-                }
-            }
-
-            pocaodevida.ForEach(d => Console.WriteLine($"Nome: {d.Nome}"));
+                }                 
         }
 
         private void MonsterAppear(Location CurrentLocation)
@@ -399,8 +364,6 @@ namespace RPGBasico
 
             _player.Vida -= damageToPlayer;
 
-           // lblVida.Content = _player.Vida.ToString();
-
             if (_player.Vida <= 0)
             {
                 WriteMessages($"Se fudeu o {_Monstro.Nome} te matou otario");                
@@ -430,6 +393,29 @@ namespace RPGBasico
                 Level = _player.Level;
             }
 
+        }
+
+        private void OpenShop_Click(object sender, RoutedEventArgs e)
+        {
+            Loja.Visibility = Visibility.Visible;
+        }
+
+        private void CloseShop_Click(object sender, RoutedEventArgs e)
+        {
+            Loja.Visibility = Visibility.Hidden;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {          
+            if (_player.Dinheiro >= 100)
+            {                
+                _player.AddItemToInvetory(Mundo.ItemById(11));
+                _player.Dinheiro -= 100;
+            }
+            else
+            {
+                WriteMessages("Você não tem dinheiro o suficiente");
+            }
         }
     }   
 }

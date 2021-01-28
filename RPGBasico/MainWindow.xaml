@@ -11,44 +11,82 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="BtnNorte" Content="Norte" HorizontalAlignment="Left" Height="19" Margin="570,436,0,0" VerticalAlignment="Top" Width="54" Click="BtnNorte_Click"/>
-        <Button x:Name="BtnSul" Content="Sul" HorizontalAlignment="Left" Height="20" Margin="570,499,0,0" VerticalAlignment="Top" Width="54" Click="BtnSul_Click"/>
-        <Button x:Name="BtnOeste" Content="Oeste" HorizontalAlignment="Left" Height="20" Margin="502,469,0,0" VerticalAlignment="Top" Width="54" Click="BtnOeste_Click"/>
-        <Button x:Name="BtnLeste" Content="Leste" HorizontalAlignment="Left" Height="20" Margin="634,469,0,0" VerticalAlignment="Top" Width="54" Click="BtnLeste_Click"/>
-        <Label x:Name="Nome" Content="Nome:" HorizontalAlignment="Left" Height="26" Margin="10,10,0,0" VerticalAlignment="Top" Width="47"/>
-        <Label x:Name="Dinheiro" Content="Dinheiro:" HorizontalAlignment="Left" Height="26" Margin="10,36,0,0" VerticalAlignment="Top" Width="56"/>
+        <Button x:Name="BtnNorte" Content="Norte" HorizontalAlignment="Left" Height="30" Margin="505,372,0,0" VerticalAlignment="Top" Width="75" Click="BtnNorte_Click" BorderBrush="Black" Background="#FFCAC8C8" Foreground="Black"/>
+        <Button x:Name="BtnSul" Content="Sul" HorizontalAlignment="Left" Height="30" Margin="505,438,0,0" VerticalAlignment="Top" Width="75" Click="BtnSul_Click" BorderBrush="Black" Background="#FFCAC8C8" Foreground="Black"/>
+        <Button x:Name="BtnOeste" Content="Oeste" HorizontalAlignment="Left" Height="30" Margin="425,403,0,0" VerticalAlignment="Top" Width="75" Click="BtnOeste_Click" RenderTransformOrigin="-0.785,0.56" BorderBrush="Black" Background="#FFCAC8C8" Foreground="Black"/>
+        <Button x:Name="BtnLeste" Content="Leste" HorizontalAlignment="Left" Height="30" Margin="585,403,0,0" VerticalAlignment="Top" Width="75" Click="BtnLeste_Click" BorderBrush="Black" Background="#FFCAC8C8" Foreground="Black" RenderTransformOrigin="0.467,0.493"/>
+        <Label x:Name="Nome" Content="Nome:" HorizontalAlignment="Left" Height="26" Margin="10,5,0,0" VerticalAlignment="Top" Width="47"/>
+        <Label x:Name="Dinheiro" Content="Dinheiro:" HorizontalAlignment="Left" Height="26" Margin="10,36,0,0" VerticalAlignment="Top" Width="59"/>
         <Label x:Name="Vida" Content="Vida:" HorizontalAlignment="Left" Height="26" Margin="10,62,0,0" VerticalAlignment="Top" Width="47"/>
-        <Label x:Name="lblNome" Content="{Binding Path=Nome, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="26" Margin="57,10,0,0" VerticalAlignment="Top" Width="88"/>
-        <Label x:Name="lblDinheiro" Content="{Binding Path=Dinheiro, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="26" Margin="71,36,0,0" VerticalAlignment="Top" Width="52"/>
-        <Label x:Name="lblVida" Content="{Binding Path=Vida, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="26" Margin="57,62,0,0" VerticalAlignment="Top" Width="52"/>
+        <Label x:Name="lblNome" Content="{Binding Path=Nome, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="26" Margin="57,5,0,0" VerticalAlignment="Top" Width="78"/>
+        <Label x:Name="lblDinheiro" Content="{Binding Path=Dinheiro, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="26" Margin="69,36,0,0" VerticalAlignment="Top" Width="78"/>
+        <Label x:Name="lblVida" Content="{Binding Path=Vida, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="26" Margin="57,62,0,0" VerticalAlignment="Top" Width="36"/>
         <Label x:Name="label4" Content="Level:" HorizontalAlignment="Left" Height="26" Margin="10,88,0,0" VerticalAlignment="Top" Width="47"/>
-        <Label x:Name="lblLevel" Content="{Binding Path=Level, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="26" Margin="57,88,0,0" VerticalAlignment="Top" Width="52"/>
-        <Label Content="Select Action" HorizontalAlignment="Left" Margin="635,534,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Width="82"/>
-        <ComboBox x:Name="CboWeapons" DisplayMemberPath="Nome" HorizontalAlignment="Left" Margin="485,571,0,87" VerticalAlignment="Center" Width="137" Height="22" ItemsSource="{Binding Weapons}"/>
-
-        <ComboBox x:Name="CboPocoes" DisplayMemberPath="Nome" HorizontalAlignment="Left" Margin="485,609,0,0" VerticalAlignment="Top" Width="137" Height="22" ItemsSource="{Binding Pocao}"/>
-        <Button x:Name="BtnUseWeapon" Content="Use" HorizontalAlignment="Left" Margin="634,571,0,0" VerticalAlignment="Top" Width="75" Click="BtnUseWeapon_Click" Height="22" />
-        <Button x:Name="btnUsePotion" Content="Use" HorizontalAlignment="Left" Margin="634,609,0,0" VerticalAlignment="Top" Width="75" Click="BtnUsePotion_Click" Height="22"/>
-        <RichTextBox x:Name="RbtMensagem" HorizontalAlignment="Left" Height="286" Margin="359,123,0,0" VerticalAlignment="Top" Width="360" IsReadOnly="True">
+        <Label x:Name="lblLevel" Content="{Binding Path=Level, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="26" Margin="57,88,0,0" VerticalAlignment="Top" Width="36" RenderTransformOrigin="0.254,0.462"/>
+        <Label Content="Select Action" HorizontalAlignment="Left" Margin="631,533,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" Width="82"/>
+        <ComboBox x:Name="CboWeapons" DisplayMemberPath="Nome" HorizontalAlignment="Left" Margin="481,570,0,88" VerticalAlignment="Center" Width="137" Height="22" ItemsSource="{Binding Weapons}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"/>
+        <ComboBox x:Name="CboPocoes" DisplayMemberPath="Nome" HorizontalAlignment="Left" Margin="481,608,0,0" VerticalAlignment="Top" Width="137" Height="22" ItemsSource="{Binding Pocao}" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="Black"/>
+        <Button x:Name="BtnUseWeapon" Content="Use" HorizontalAlignment="Left" Margin="630,570,0,0" VerticalAlignment="Top" Width="75" Click="BtnUseWeapon_Click" Height="22" BorderBrush="Black" Background="White" >
+            <Button.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black" Offset="0"/>
+                    <GradientStop Color="#FF9A2B2B" Offset="1"/>
+                </LinearGradientBrush>
+            </Button.Foreground>
+        </Button>
+        <Button x:Name="btnUsePotion" Content="Use" HorizontalAlignment="Left" Margin="630,608,0,0" VerticalAlignment="Top" Width="75" Click="BtnUsePotion_Click" Height="22" BorderBrush="Black" Background="White">
+            <Button.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black" Offset="0"/>
+                    <GradientStop Color="#FF9A2B2B" Offset="1"/>
+                </LinearGradientBrush>
+            </Button.Foreground>
+        </Button>
+        <RichTextBox x:Name="RbtMensagem" HorizontalAlignment="Left" Height="238" Margin="345,88,0,0" VerticalAlignment="Top" Width="360" IsReadOnly="True" BorderBrush="Black" SelectionBrush="Black">
             <FlowDocument/>
         </RichTextBox>
-        <DataGrid x:Name="dgvInvetory" HorizontalAlignment="Left" Height="197" Margin="10,129,0,0" VerticalAlignment="Top" Width="324" IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding Inventario}">
+        <DataGrid x:Name="dgvInvetory" HorizontalAlignment="Left" Height="197" Margin="10,129,0,0" VerticalAlignment="Top" Width="310" IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding Inventario}" BorderBrush="Black">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Descricao, UpdateSourceTrigger=PropertyChanged}" CanUserSort="False" CanUserReorder="False" ClipboardContentBinding="{x:Null}" Header="Descricao" Width="220"/>
                 <DataGridTextColumn Binding="{Binding Quantidade, UpdateSourceTrigger=PropertyChanged}" ClipboardContentBinding="{x:Null}" Header="Quantidade" Width="80"/>
             </DataGrid.Columns>
         </DataGrid>
-        <DataGrid x:Name="dgvQuest" HorizontalAlignment="Left" Height="197" Margin="10,379,0,0" VerticalAlignment="Top" Width="324" IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding Quest}">
+        <DataGrid x:Name="dgvQuest" HorizontalAlignment="Left" Height="197" Margin="10,343,0,0" VerticalAlignment="Top" Width="310" IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding Quest}" BorderBrush="Black">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Details.Nome, UpdateSourceTrigger=PropertyChanged}" ClipboardContentBinding="{x:Null}" Header="Nome" Width="240"/>
                 <DataGridCheckBoxColumn Binding="{Binding IsCompleted, UpdateSourceTrigger=PropertyChanged}" ClipboardContentBinding="{x:Null}" Header="Completa?" CanUserSort="False" CanUserReorder="False" />
             </DataGrid.Columns>
         </DataGrid>
 
-        <RichTextBox x:Name="RbtLocation" HorizontalAlignment="Left" Height="105" Margin="359,13,0,0" VerticalAlignment="Top" Width="360" IsReadOnly="True" IsUndoEnabled="False">
-            <FlowDocument/>
+        <RichTextBox x:Name="RbtLocation" HorizontalAlignment="Left" Height="52" Margin="345,17,0,0" VerticalAlignment="Top" Width="360" IsReadOnly="True" IsUndoEnabled="False" BorderBrush="Black" SelectionBrush="Black" Block.TextAlignment="Center">
+            <FlowDocument>
+                <Paragraph>
+                    <Run/>
+                </Paragraph>
+            </FlowDocument>
         </RichTextBox>
-        <Label x:Name="Experiencia" Content="Experiencia:" HorizontalAlignment="Left" Height="26" Margin="158,10,0,0" VerticalAlignment="Top" Width="71"/>
-        <Label x:Name="lblExperiencia" Content="{Binding Path=Experiencia, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="26" Margin="234,10,0,0" VerticalAlignment="Top" Width="91"/>
+        <Label x:Name="Experiencia" Content="Experiencia:" HorizontalAlignment="Left" Height="26" Margin="140,5,0,0" VerticalAlignment="Top" Width="71"/>
+        <Label x:Name="lblExperiencia" Content="{Binding Path=Experiencia, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="26" Margin="216,5,0,0" VerticalAlignment="Top" Width="91"/>
+        <Grid x:Name="Loja" HorizontalAlignment="Left" Height="305" Margin="184,118,0,0" VerticalAlignment="Top" Width="401" Cursor="" Background="{DynamicResource {x:Static SystemColors.GradientInactiveCaptionBrushKey}}">
+            <Button x:Name="CloseShop" Content="Button" HorizontalAlignment="Left" Margin="381,2,0,0" VerticalAlignment="Top" Width="20" Height="15" RenderTransformOrigin="0.367,0.474" Background="Red" BorderBrush="#FFF18383" Foreground="{x:Null}" Click="CloseShop_Click">
+                <Button.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="0.643"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Button.RenderTransform>
+            </Button>
+            <Button Content="Button" HorizontalAlignment="Left" Margin="10,82,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        </Grid>
+        <Button x:Name="OpenShop" Content="Loja" HorizontalAlignment="Left" Margin="10,630,0,0" VerticalAlignment="Top" Width="59" Height="20" Background="White" BorderBrush="Black" Click="OpenShop_Click">
+            <Button.Foreground>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black" Offset="0"/>
+                    <GradientStop Color="#FFCA4040" Offset="1"/>
+                </LinearGradientBrush>
+            </Button.Foreground>
+        </Button>
     </Grid>
 </Window>
